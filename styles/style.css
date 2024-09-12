@@ -1,0 +1,68 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+
+.toolbar {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.colorButton {
+    margin: 0 5px;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    width: 30px;
+    height: 30px;
+}
+
+#currentColor, #previousColor {
+    border-radius: 50%;
+    border: 2px solid #000;
+}
+
+.colorButton {
+    border-radius: 50%;
+    border: 2px solid #000;
+}
+
+#colorPalette {
+    display: none;
+    flex-direction: row;
+    flex-wrap: wrap;
+    position: absolute;
+    top: 50px;
+    left: 10px;
+}
+
+#drawingCanvas {
+    border: 1px solid #000;
+    cursor: crosshair;
+    width: 400px;
+    height: 400px; /* 高さも幅と同じにする */
+}
+
+.code-section {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#codeInput {
+    margin-top: 10px;
+    padding: 5px;
+    font-size: 16px;
+}

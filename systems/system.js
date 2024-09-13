@@ -5,14 +5,11 @@ canvas.height = 400; // 高さも幅と同じにする
 
 let drawing = false;
 let color = "#000000";  // 初期色を黒に設定
-let previousColor = "#ffffff"; // 初期の前の色を白に設定
 
 const currentColorButton = document.getElementById('currentColor');
-const previousColorButton = document.getElementById('previousColor');
 const colorPalette = document.getElementById('colorPalette');
 const showPaletteButton = document.getElementById('showPaletteButton');
 const title = document.getElementById('title');
-const author = document.getElementById('author');
 
 // キャンバスの背景を白で塗りつぶす関数
 function fillBackground() {
@@ -23,22 +20,25 @@ function fillBackground() {
 // 初期化時に背景を白で塗りつぶす
 fillBackground();
 
-// イベントリスナーで描画を開始・終了
-canvas.addEventListener('mousedown', () => {
+// 描画を開始する関数
+function startDrawing(event) {
     drawing = true;
-});
+    draw(event);
+}
 
-canvas.addEventListener('mouseup', () => {
+// 描画を終了する関数
+function stopDrawing() {
     drawing = false;
     ctx.beginPath();
-});
+}
 
-canvas.addEventListener('mousemove', draw);
-
+// 描画を行う関数
 function draw(event) {
     if (!drawing) return;
 
-    let color = document.getElementById('codeInput').value; // 初期色を黒に設定
+    event.preventDefault();  // デフォルトのタッチイベントを無効化
+
+    let color = document.getElementById('codeInput').value; // 選択した色を取得
     let lineWidth = Number(document.getElementById('characterThickness').value); // 選択した太さを取得
 
     ctx.lineWidth = lineWidth;
@@ -46,11 +46,26 @@ function draw(event) {
     ctx.strokeStyle = color;
     currentColorButton.style.backgroundColor = color; // 現在の色を更新
 
-    ctx.lineTo(event.clientX - canvas.offsetLeft, event.clientY - canvas.offsetTop);
+    // タッチイベントの場合とマウスイベントの場合の位置計算
+    const rect = canvas.getBoundingClientRect();
+    const x = event.touches ? (event.touches[0].clientX - rect.left) : (event.clientX - rect.left);
+    const y = event.touches ? (event.touches[0].clientY - rect.top) : (event.clientY - rect.top);
+
+    ctx.lineTo(x, y);
     ctx.stroke();
     ctx.beginPath();
-    ctx.moveTo(event.clientX - canvas.offsetLeft, event.clientY - canvas.offsetTop);
+    ctx.moveTo(x, y);
 }
+
+// イベントリスナーを設定
+canvas.addEventListener('mousedown', startDrawing);
+canvas.addEventListener('mouseup', stopDrawing);
+canvas.addEventListener('mousemove', draw);
+
+// タッチイベントに対応するイベントリスナー
+canvas.addEventListener('touchstart', startDrawing);
+canvas.addEventListener('touchend', stopDrawing);
+canvas.addEventListener('touchmove', draw);
 
 // 色ボタンのクリックイベント
 document.querySelectorAll('.colorButton').forEach(button => {
@@ -73,17 +88,12 @@ customColorInput.addEventListener('input', () => {
 
 // カラーパレットの表示/非表示を切り替える
 showPaletteButton.addEventListener('click', () => {
-    if (colorPalette.style.display === 'none') {
-        colorPalette.style.display = 'flex';
-    } else {
-        colorPalette.style.display = 'none';
-    }
+    colorPalette.style.display = colorPalette.style.display === 'none' ? 'flex' : 'none';
 });
 
 // クリアボタンのクリックイベント
 const clearButton = document.getElementById('clearButton');
 clearButton.addEventListener('click', () => {
-    fillBackground(); // 背景を白で塗りつぶす
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     fillBackground(); // 再度白で塗りつぶす
 });
@@ -91,7 +101,6 @@ clearButton.addEventListener('click', () => {
 // ダウンロードボタンのクリックイベント
 const downloadButton = document.getElementById('downloadButton');
 downloadButton.addEventListener('click', () => {
-
     // キャンバスをPNG画像データに変換
     const image = canvas.toDataURL('image/png');
     

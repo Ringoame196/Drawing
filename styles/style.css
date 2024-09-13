@@ -1,3 +1,4 @@
+/* 共通スタイル */
 body {
     display: flex;
     flex-direction: column;
@@ -26,14 +27,11 @@ h1 {
     border: none;
     width: 30px;
     height: 30px;
-}
-
-#currentColor, #previousColor {
     border-radius: 50%;
     border: 2px solid #000;
 }
 
-.colorButton {
+#currentColor, #previousColor {
     border-radius: 50%;
     border: 2px solid #000;
 }
@@ -47,13 +45,6 @@ h1 {
     left: 10px;
 }
 
-#drawingCanvas {
-    border: 1px solid #000;
-    cursor: crosshair;
-    width: 400px;
-    height: 400px; /* 高さも幅と同じにする */
-}
-
 .code-section {
     margin-top: 20px;
     display: flex;
@@ -65,4 +56,46 @@ h1 {
     margin-top: 10px;
     padding: 5px;
     font-size: 16px;
+}
+
+/* PC用スタイル */
+#drawingCanvas {
+    border: 1px solid #000;
+    cursor: crosshair;
+    width: 400px;
+    height: 400px; /* 高さも幅と同じにする */
+}
+
+.toolbar {
+    flex-direction: row;
+    justify-content: center;
+}
+
+/* スマホ用スタイル */
+@media (max-width: 768px) {
+    #drawingCanvas {
+        width: 300px;
+        height: 300px;
+    }
+
+    .toolbar {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .colorButton {
+        margin: 5px 0;
+    }
+
+    #clearButton, #downloadButton {
+        width: 80%;
+        margin: 10px 0;
+    }
+
+    #colorPalette {
+        top: 60px;
+        left: 10px;
+        width: 80%;
+        justify-content: center;
+    }
 }
